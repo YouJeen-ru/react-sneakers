@@ -1,11 +1,12 @@
 import React from "react";
+import styles from './Card.module.scss'
 
 
 const Card = ({ title, price, imageUrl }) => {
   return (
-      <div className="card">
-          <div className='favorite'>
-              <img src="/img/heart-liked.svg" alt="Unliked"/>
+      <div className={styles.card}>
+          <div className={styles.favorite}>
+              <img src="/img/heart-unliked.svg" alt="Unliked"/>
           </div>
           <img width={133} height={112} src={imageUrl} alt=""/>
           <h5>{title}</h5>
