@@ -1,19 +1,24 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import Card from "./components/Card";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
 
 
-const state = [
-    {title: 'Мужские Кроссовки Nike Blazer Mid Suede', price: 12999, imageUrl: '/img/sneakers/1.jpg'},
-    {title: 'Мужские Кроссовки Nike Air Max 270', price: 15600, imageUrl: '/img/sneakers/2.jpg'},
-    {title: 'Мужские Кроссовки Nike Blazer Mid Suede', price: 13200, imageUrl: '/img/sneakers/3.jpg'},
-    {title: 'Кроссовки Puma X Aka Boku Future Rider', price: 8990, imageUrl: '/img/sneakers/4.jpg'},
-]
 
 function App() {
+    const [items, setItems] = useState([])
     const [cartOpened, setCartOpened] = useState(false)
+
+    useEffect(() => {
+        fetch('https://614075c35cb9280017a11300.mockapi.io/items').then(res => {
+            return res.json()
+        }).then((json) => {
+            setItems(json)
+        })
+    }, [])
+
+
     return (
         <div className='wrapper clear'>
 
@@ -30,9 +35,9 @@ function App() {
                     </div>
                 </div>
 
-                <div className='d-flex'>
+                <div className='d-flex  flex-wrap'>
                     {
-                        state.map((obj) => (
+                        items.map((obj) => (
                             <Card title={obj.title} price={obj.price} imageUrl={obj.imageUrl}/>
                         ))
                     }
