@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import Card from "./components/Card";
 import Header from "./components/Header";
@@ -13,10 +13,13 @@ const state = [
 ]
 
 function App() {
+    const [cartOpened, setCartOpened] = useState(false)
     return (
         <div className='wrapper clear'>
-            <Drawer/>
-            <Header/>
+
+            {  cartOpened && <Drawer onClose={() => setCartOpened(false)}/>}
+
+            <Header onClickCart={() => setCartOpened(true)}/>
 
             <div className="content p-40">
                 <div className='d-flex align-center justify-between mb-40'>

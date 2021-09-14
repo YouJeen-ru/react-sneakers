@@ -1,12 +1,12 @@
 import React from "react";
 
-const Drawer = () => {
+const Drawer = ({ onClose }) => {
     return (
-        <div style={{display: 'none'}} className="overlay">
+        <div className="overlay">
             <div className="drawer justify-between">
                 <h2 className='d-flex justify-between mb-30'>
                     Корзина
-                    <img className='removeBtn cu-p' src="/img/btn-remove.svg" alt="remove"/>
+                    <img onClick={onClose} className='removeBtn cu-p' src="/img/btn-remove.svg" alt="close"/>
                 </h2>
 
                 <div className="items">
