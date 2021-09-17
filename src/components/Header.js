@@ -15,6 +15,9 @@ const Header = ({onClickCart}) => {
                   <img width={18} height={18} src="/img/cart.svg" alt="log"/>
                   <span>1205 руб.</span>
               </li>
+              <li className='mr-20 cu-p'>
+                  <img width={18} height={18} src="/img/heart.svg" alt="log"/>
+              </li>
               <li>
                   <img width={18} height={18} src="/img/user.svg" alt="log"/>
               </li>
