@@ -9,6 +9,7 @@ import Drawer from "./components/Drawer";
 function App() {
     const [items, setItems] = useState([])
     const [cartItems, setCartItems] = useState([])
+    const [searchValue, setSearchValue] = useState('')
     const [cartOpened, setCartOpened] = useState(false)
 
     useEffect(() => {
@@ -23,6 +24,10 @@ function App() {
         setCartItems(prev => [...prev, obj])
     }
 
+    const onChangeSearchInput = (e) => {
+        setSearchValue(e.target.value)
+    }
+
 
     return (
         <div className='wrapper clear'>
@@ -33,17 +38,20 @@ function App() {
 
             <div className="content p-40">
                 <div className='d-flex align-center justify-between mb-40'>
-                    <h1>Все кроссовки</h1>
+                    <h1>{searchValue ? `Поиск по запросу: "${searchValue}"` : 'Все кроссовки'}</h1>
                     <div className='search-block d-flex'>
                         <img src="/img/search.svg" alt="search"/>
-                        <input type="text" placeholder='Поиск...'/>
+                        { searchValue && <img onClick={() => setSearchValue('')} className='clear cu-p' src="/img/btn-remove.svg" alt="clear"/> }
+                        <input onChange={onChangeSearchInput} value={searchValue} type="text" placeholder='Поиск...'/>
                     </div>
                 </div>
 
                 <div className='d-flex  flex-wrap'>
                     {
-                        items.map((item) => (
+                        items.filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
+                            .map((item, _i) => (
                             <Card
+                                key={_i}
                                 title={item.title}
                                 price={item.price}
                                 imageUrl={item.imageUrl}
