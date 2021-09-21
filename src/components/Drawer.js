@@ -11,7 +11,7 @@ const Drawer = ({onClose, onRemove, cartItems = []}) => {
 
                 {
                     cartItems.length > 0 ?
-                        <div>
+                        <div className="d-flex flex-column flex">
                             <div className="items">
                                 {
                                     cartItems.map((obj) => (
