@@ -14,17 +14,22 @@ function App() {
     const [favorites, setFavorites] = useState([])
     const [searchValue, setSearchValue] = useState('')
     const [cartOpened, setCartOpened] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        axios.get('https://614075c35cb9280017a11300.mockapi.io/items').then(res => {
-            setItems(res.data)
-        })
-        axios.get('https://614075c35cb9280017a11300.mockapi.io/cart').then(res => {
-            setCartItems(res.data)
-        })
-        axios.get('https://614075c35cb9280017a11300.mockapi.io/favorites').then(res => {
-            setFavorites(res.data)
-        })
+        async function fetchData() {
+            const cartResponse = await axios.get('https://614075c35cb9280017a11300.mockapi.io/cart')
+            const favoritesResponse = await axios.get('https://614075c35cb9280017a11300.mockapi.io/favorites')
+            const ItemsResponse = await axios.get('https://614075c35cb9280017a11300.mockapi.io/items')
+
+            setIsLoading(false)
+
+            setCartItems(cartResponse.data)
+            setFavorites(favoritesResponse.data)
+            setItems(ItemsResponse.data)
+        }
+
+        fetchData()
     }, [])
 
     const onAddToCart = (obj) => {
@@ -47,14 +52,14 @@ function App() {
 
     const onRemoveItem = (id) => {
         axios.delete(`https://614075c35cb9280017a11300.mockapi.io/cart/${id}`)
-        setCartItems(prev => prev.filter((item) => item.id !== id))
+        setCartItems(prev => prev.filter((item) =>Number(item.id) !== Number(id)))
     }
 
     const onAddToFavorite = async (obj) => {
         try {
-            if (favorites.find(favObj => favObj.id === obj.id)) {
+            if (favorites.find(favObj => Number(favObj.id) === Number(obj.id))) {
                 axios.delete(`https://614075c35cb9280017a11300.mockapi.io/favorites/${obj.id}`)
-                setFavorites(prev => prev.filter((item) => item.id !== obj.id)) // ? удаление и на UI и на DB
+                setFavorites(prev => prev.filter((item) => Number(item.id) !== Number(obj.id))) // ? удаление и на UI и на DB
             } else {
                 const { data } = await axios.post(`https://614075c35cb9280017a11300.mockapi.io/favorites`, obj)
                 setFavorites(prev => [...prev, data])
@@ -78,11 +83,13 @@ function App() {
             <Route path='/' exact>
                 <Home
                     items={items}
+                    cartItems={cartItems}
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
                     onChangeSearchInput={onChangeSearchInput}
                     onAddToFavorite={onAddToFavorite}
                     onAddToCart={onAddToCart}
+                    isLoading={isLoading}
                 />
             </Route>
 
