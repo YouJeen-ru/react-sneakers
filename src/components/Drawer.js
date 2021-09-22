@@ -1,15 +1,38 @@
 import React, {useContext, useState} from "react";
 import Info from "./Info";
 import {AppContext} from "../context";
+import axios from "axios";
 
-const Drawer = ({onClose, onRemove, cartItems = []}) => {
-    const { setCartItems } = useContext(AppContext)
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const Drawer = ({onClose, onRemove}) => {
+    const { cartItems, setCartItems } = useContext(AppContext)
 
     const [isComplete, setIsComplete] = useState(false)
+    const [orderId, setOrderID] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
-    const onClickOrder = () => {
-      setIsComplete(true)
-        setCartItems([])
+    const onClickOrder = async () => {
+       try {
+           setIsLoading(true)
+           const { data } = await axios.post('https://614075c35cb9280017a11300.mockapi.io/orders', {
+               items: cartItems,
+           })
+
+           setOrderID(data.id)
+           setIsComplete(true)
+           setCartItems([])
+
+           for (let i = 0; i < cartItems.length; i++) {
+               const item = cartItems[i]
+               await axios.delete('https://614075c35cb9280017a11300.mockapi.io/cart/' + Number(item.id))
+               delay(1000)
+           }
+
+       } catch (e) {
+           alert("Ошибка при создании заказа :(")
+       }
+       setIsLoading(false)
     }
     return (
         <div className="overlay">
@@ -52,7 +75,7 @@ const Drawer = ({onClose, onRemove, cartItems = []}) => {
                                     </li>
                                 </ul>
 
-                                <button onClick={onClickOrder} className='greenButton'>
+                                <button disabled={isLoading} onClick={onClickOrder} className='greenButton'>
                                     Оформить заказ <img src="/img/arrow.svg" alt="arrow"/>
                                 </button>
                             </div>
@@ -61,7 +84,7 @@ const Drawer = ({onClose, onRemove, cartItems = []}) => {
                         <Info
                             title={isComplete ? 'Заказ оформлен!' :'Корзина пустая'}
                             description={isComplete
-                                ? 'Ваш заказ #18 скоро будет передан курьерской доставке'
+                                ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
                                 : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'}
                             image={isComplete ? '/img/complete-order.jpg' : '/img/empty-cart.jpg'}
                         />
