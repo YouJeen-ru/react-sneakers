@@ -45,12 +45,22 @@ function App() {
     const onAddToCart = async (obj) => {
 
         try {
-            if (cartItems.find(item => Number(item.id) === Number(obj.id))) {
-                setCartItems(prev => prev.filter(item => Number(item.id) !== Number(obj.id)))
-                await axios.delete(`https://614075c35cb9280017a11300.mockapi.io/cart/${obj.id}`)
+            const findItem = cartItems.find(item => Number(item.parentId) === Number(obj.id))
+            if (findItem) {
+                setCartItems(prev => prev.filter(item => Number(item.parentId) !== Number(obj.id)))
+                await axios.delete(`https://614075c35cb9280017a11300.mockapi.io/cart/${findItem.id}`)
             } else {
                 setCartItems(prev => [...prev, obj])
-                await axios.post('https://614075c35cb9280017a11300.mockapi.io/cart', obj)
+                const {data} = await axios.post('https://614075c35cb9280017a11300.mockapi.io/cart', obj)
+                setCartItems(prev => prev.map(item => {
+                    if (item.parentId === data.parentId) {
+                        return {
+                            ...item,
+                            id: data.id
+                        }
+                    }
+                    return item
+                }))
             }
         } catch (e) {
             alert('Ошибка при добавления товара в корзину ')
@@ -91,7 +101,7 @@ function App() {
     }
 
     const isItemAdded = (id) => {
-        return cartItems.some(obj => Number(obj.id) === Number(id))
+        return cartItems.some(obj => Number(obj.parentId) === Number(id))
     }
 
 
