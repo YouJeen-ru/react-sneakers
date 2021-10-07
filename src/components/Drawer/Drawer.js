@@ -42,7 +42,7 @@ const Drawer = ({onClose, onRemove, items = [], opened}) => {
             <div className={`${styles.drawer}`}>
                 <h2 className='d-flex justify-between mb-30'>
                     Корзина
-                    <img onClick={onClose} className='removeBtn cu-p' src="/img/btn-remove.svg" alt="close"/>
+                    <img onClick={onClose} className='removeBtn cu-p' src="img/btn-remove.svg" alt="close"/>
                 </h2>
 
                 {
@@ -59,7 +59,7 @@ const Drawer = ({onClose, onRemove, items = [], opened}) => {
                                                 <b>{obj.price} руб.</b>
                                             </div>
                                             <img onClick={() => onRemove(obj.id)} className='removeBtn'
-                                                 src="/img/btn-remove.svg" alt="remove"/>
+                                                 src="img/btn-remove.svg" alt="remove"/>
                                         </div>
                                     ))
                                 }
@@ -79,7 +79,7 @@ const Drawer = ({onClose, onRemove, items = [], opened}) => {
                                 </ul>
 
                                 <button disabled={isLoading} onClick={onClickOrder} className='greenButton'>
-                                    Оформить заказ <img src="/img/arrow.svg" alt="arrow"/>
+                                    Оформить заказ <img src="img/arrow.svg" alt="arrow"/>
                                 </button>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ const Drawer = ({onClose, onRemove, items = [], opened}) => {
                             description={isComplete
                                 ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
                                 : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'}
-                            image={isComplete ? '/img/complete-order.jpg' : '/img/empty-cart.jpg'}
+                            image={isComplete ? 'img/complete-order.jpg' : 'img/empty-cart.jpg'}
                         />
 
                 }
